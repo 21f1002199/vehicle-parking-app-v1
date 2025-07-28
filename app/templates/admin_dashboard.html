@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<!-- Page Heading and Button -->
+<div class="d-flex justify-content-between align-items-center mb-4">
+  <h2>Admin Dashboard</h2>
+  <a href="{{ url_for('.create_lot') }}" class="btn btn-primary">
+    <i class="bi bi-plus-circle"></i> Create New Parking Lot
+  </a>
+</div>
+
+<!-- Parking Lots Section -->
+<div class="card mb-4 shadow-sm">
+  <div class="card-header bg-primary text-white">Parking Lots</div>
+  <div class="card-body p-0">
+    <table class="table mb-0">
+      <thead class="table-light">
+        <tr>
+          <th>Name</th><th>Address</th><th>Pin</th><th>Price per Hour</th><th>Max Spots</th><th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for lot in lots %}
+        <tr>
+          <td>{{ lot.name }}</td>
+          <td>{{ lot.address }}</td>
+          <td>{{ lot.pin_code }}</td>
+          <td>₹{{ lot.price }}</td>
+          <td>{{ lot.max_spots }}</td>
+
+	  <td>
+  	<a class="btn btn-info btn-sm me-1" href="{{ url_for('.view_lot_spots', lot_id=lot.id) }}">
+    	<i class="bi bi-eye"></i> View Spots
+  	</a>
+  	<a class="btn btn-primary btn-sm me-1" href="{{ url_for('.edit_lot', lot_id=lot.id) }}">
+    	<i class="bi bi-pencil-square"></i> Edit
+  	</a>
+  	<a class="btn btn-danger btn-sm" href="{{ url_for('.delete_lot', lot_id=lot.id) }}">
+    	<i class="bi bi-trash"></i> Delete
+  	</a>
+	</td>
+
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+
+
+{% endblock %}
+

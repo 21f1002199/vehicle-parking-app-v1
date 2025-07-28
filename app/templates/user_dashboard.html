@@ -1,0 +1,96 @@
+{% extends 'base.html' %}
+{% block content %}
+<h2>User Dashboard</h2>
+
+<h4>Available Parking Lots</h4>
+<table class="table table-bordered">
+    <tr><th>Name</th><th>Address</th><th>Available Spots</th><th>Action</th></tr>
+    {% for item in lot_data %}
+    <tr>
+        <td>{{ item.lot.name }}</td>
+        <td>{{ item.lot.address }}</td>
+        <td>{{ item.available_spots }}</td>
+        <td>
+            <a class="btn btn-success" href="{{ url_for('.reserve', lot_id=item.lot.id) }}">Reserve Spot</a>
+        </td>
+    </tr>
+    {% endfor %}
+</table>
+
+<hr>
+
+<h4>Current Reservations</h4>
+{% if current_reservations %}
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th>Lot</th><th>Start Date</th><th>Start Time</th><th>Action</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for r in current_reservations %}
+    <tr>
+      <td>{{ r.spot.lot.name }}</td>
+      <td>{{ r.start_time.strftime('%d-%m-%Y') if r.start_time else 'N/A' }}</td>
+      <td>{{ r.start_time.strftime('%H:%M:%S') if r.start_time else 'N/A' }}</td>
+      <td>
+       <a href="{{ url_for('.release', reservation_id=r.id) }}" class="btn btn-warning btn-sm">Release Spot</a>
+      </td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% else %}
+<p>No active reservations.</p>
+{% endif %}
+
+<hr>
+
+<h4>Reservation History</h4>
+{% if past_reservations %}
+<form method="POST" action="{{ url_for('.delete_all_history') }}" onsubmit="return confirm('Delete ALL reservation history?');">
+  <button type="submit" class="btn btn-danger mb-3">Delete All History</button>
+</form>
+<table class="table table-striped">
+  <thead>
+    <tr>
+	<th>Lot</th>
+    	<th>Start Date</th>
+    	<th>Start Time</th>
+    	<th>End Date</th>
+    	<th>End Time</th>
+    	<th>Duration</th>
+    	<th>Cost</th>
+    	<th>Action</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for r in past_reservations %}
+    <tr>
+      <td>{{ r.spot.lot.name }}</td>
+      <td>{{ r.start_time.strftime('%d-%m-%Y') }}</td>
+      <td>{{ r.start_time.strftime('%H:%M:%S') }}</td>
+      <td>{{ r.end_time.strftime('%d-%m-%Y') }}</td>
+      <td>{{ r.end_time.strftime('%H:%M:%S') }}</td>
+      <td>
+    	{% set duration = r.end_time - r.start_time %}
+    	{% set hours = duration.total_seconds() // 3600 %}
+    	{% set minutes = (duration.total_seconds() % 3600) // 60 %}
+    	{{ hours|int }}h {{ minutes|int }}m
+      </td>
+      <td>₹{{ r.cost }}</td>
+      <td>
+        <form method="POST" action="{{ url_for('.delete_history', reservation_id=r.id) }}" onsubmit="return confirm('Delete this reservation record?');">
+          <button type="submit" class="btn btn-outline-danger btn-sm">Delete</button>
+        </form>
+      </td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% else %}
+<p>No history available.</p>
+{% endif %}
+
+{% endblock %}
+

@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+{% block content %}
+<h2>Reserve Spot</h2>
+<form method="POST" onsubmit="return confirmReserve()">
+  {{ form.hidden_tag() }}
+  <div class="mb-3">{{ form.spot_id.label }} {{ form.spot_id(class="form-control", readonly=True) }}</div>
+  <div class="mb-3">{{ form.lot_id.label }} {{ form.lot_id(class="form-control", readonly=True) }}</div>
+  <div class="mb-3">{{ form.user_id.label }} {{ form.user_id(class="form-control", readonly=True) }}</div>
+  <div class="mb-3">{{ form.vehicle_number.label }} {{ form.vehicle_number(class="form-control") }}</div>
+
+  <button type="submit" class="btn btn-primary">Submit Reservation</button>
+  <button type="button" class="btn btn-secondary" onclick="confirmCancel()">Cancel</button>
+</form>
+
+<script>
+function confirmReserve() {
+    return confirm("Are you sure you want to proceed with the reservation?");
+}
+function confirmCancel() {
+    if (confirm("Are you sure you don't want to continue with the reservation process?")) {
+        window.location.href = "{{ url_for('.user_dashboard') }}";
+    }
+}
+</script>
+{% endblock %}
+

@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+{% block content %}
+<h3>Confirm Spot Release</h3>
+
+<div class="alert alert-warning">
+    <p><strong>Lot:</strong> {{ lot.name }}</p>
+    <p><strong>Start Time:</strong> {{ reservation.start_time.strftime('%d-%m-%Y %H:%M:%S') }}</p>
+    <p><strong>Duration:</strong> {{ duration }}</p>
+    <p><strong>Total Cost:</strong> ₹{{ cost }}</p>
+</div>
+
+<form method="POST">
+    <button type="submit" class="btn btn-success">Okay</button>
+    <a href="{{ url_for('.user_dashboard') }}" class="btn btn-secondary">Cancel</a>
+</form>
+{% endblock %}
+

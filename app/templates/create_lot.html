@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+{% block content %}
+<h2>Create Parking Lot</h2>
+<form method="POST">
+    {{ form.hidden_tag() }}
+    <div class="mb-3">{{ form.name.label }} {{ form.name(class="form-control") }}</div>
+    <div class="mb-3">{{ form.address.label }} {{ form.address(class="form-control") }}</div>
+    <div class="mb-3">{{ form.pin_code.label }} {{ form.pin_code(class="form-control") }}</div>
+    <div class="mb-3">{{ form.price.label }} {{ form.price(class="form-control") }}</div>
+    <div class="mb-3">{{ form.max_spots.label }} {{ form.max_spots(class="form-control") }}</div>
+    {{ form.submit(class="btn btn-primary") }}
+</form>
+{% endblock %}
+

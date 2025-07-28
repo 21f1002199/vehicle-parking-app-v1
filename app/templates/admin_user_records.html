@@ -1,0 +1,83 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container mt-4">
+    <h2>Parking Records for {{ user.full_name }} ({{ user.username }})</h2>
+
+    {% if current_reservation %}
+    <div class="alert alert-info">
+      <strong>Current Reservation:</strong><br>
+      Vehicle: {{ current_reservation.vehicle_number }}<br>
+      Spot: {{ current_reservation.spot.spot_number }} in Lot: {{ current_reservation.spot.lot.name }}<br>
+      Entry Time: {{ current_reservation.start_time.strftime('%d-%m-%Y %H:%M:%S') }}
+    </div>
+    {% else %}
+    <div class="alert alert-secondary">No active reservations.</div>
+    {% endif %}
+
+    <h4 class="mt-4">Reservation History</h4>
+    <table class="table table-bordered">
+      <thead class="table-light">
+        <tr>
+          <th>Vehicle Number</th>
+          <th>Start Date</th>
+          <th>Start Time</th>
+          <th>Exit Date</th>
+          <th>Exit Time</th>
+          <th>Duration</th>
+          <th>Cost (₹)</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for res in reservation_history %}
+        <tr>
+          <td>{{ res.vehicle_number }}</td>
+          <td>
+            {% if res.start_time %}
+              {{ res.start_time.strftime('%d-%m-%Y') }}
+            {% else %}
+              N/A
+            {% endif %}
+          </td>
+          <td>
+            {% if res.start_time %}
+              {{ res.start_time.strftime('%H:%M:%S') }}
+            {% else %}
+              N/A
+            {% endif %}
+          </td>
+          <td>
+            {% if res.end_time %}
+              {{ res.end_time.strftime('%d-%m-%Y') }}
+            {% else %}
+              In Use
+            {% endif %}
+          </td>
+          <td>
+            {% if res.end_time %}
+              {{ res.end_time.strftime('%H:%M:%S') }}
+            {% else %}
+              In Use
+            {% endif %}
+          </td>
+          <td>
+            {% if res.start_time and res.end_time %}
+              {# calculate total seconds including days #}
+              {% set delta = res.end_time - res.start_time %}
+              {% set total_seconds = delta.days * 86400 + delta.seconds %}
+              {% set hrs = total_seconds // 3600 %}
+              {% set mins = (total_seconds % 3600) // 60 %}
+              {{ hrs }} hr {{ mins }} min
+            {% else %}
+              In Use
+            {% endif %}
+          </td>
+          <td>₹{{ res.cost or 'TBD' }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+
+    <a href="{{ url_for('.admin_users') }}" class="btn btn-secondary">Back to Users</a>
+</div>
+{% endblock %}
+

@@ -1,0 +1,67 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<h2 class="mb-4">Search</h2>
+
+<form method="POST" class="row g-3 mb-4">
+  {{ form.hidden_tag() }}
+  <div class="col-md-4">
+    {{ form.query(class="form-control", placeholder="Enter keyword...") }}
+  </div>
+  <div class="col-md-3">
+    {{ form.search_in(class="form-select") }}
+  </div>
+  <div class="col-md-2">
+    {{ form.submit(class="btn btn-primary") }}
+  </div>
+</form>
+
+{% if user_results %}
+  <h5>Matching Users</h5>
+  <table class="table table-bordered">
+    <thead>
+      <tr>
+	      <th>Username</th><th>Full Name</th><th>Email</th><th>Phone</th><th>Address</th><th>PIN Code</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for user in user_results %}
+      <tr>
+        <td>{{ user.username }}</td>
+        <td>{{ user.full_name or 'N/A' }}</td>
+        <td>{{ user.email }}</td>
+	<td>{{ user.phone_number or 'N/A' }}</td>
+        <td>{{ user.address or 'N/A' }}</td>
+        <td>{{ user.pin_code or 'N/A' }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+{% endif %}
+
+{% if lot_results %}
+  <h5>Matching Lots</h5>
+  <table class="table table-bordered">
+    <thead>
+      <tr>
+        <th>Name</th><th>Address</th><th>PIN Code</th><th>Available Spots</th><th>Occupied Spots</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for item in lot_results %}
+      <tr>
+        <td>{{ item.lot.name }}</td>
+        <td>{{ item.lot.address }}</td>
+        <td>{{ item.lot.pin_code }}</td>
+        <td>{{ item.available }}</td>
+        <td>{{ item.occupied }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+{% endif %}
+
+
+
+{% endblock %}
+

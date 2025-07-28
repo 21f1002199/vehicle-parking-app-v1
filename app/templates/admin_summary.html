@@ -1,0 +1,78 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>Summary Report</h2>
+
+
+
+
+
+    <form method="GET" class="row g-3 mb-4">
+    	<div class="col-md-2">
+        	<label for="month" class="form-label">Month</label>
+        	<select name="month" id="month" class="form-select">
+            	{% for m in range(1, 13) %}
+            	<option value="{{ m }}" {% if m == selected_month %}selected{% endif %}>{{ "%02d"|format(m) }}</option>
+            	{% endfor %}
+        	</select>
+    	</div>
+    	<div class="col-md-2">
+        	<label for="year" class="form-label">Year</label>
+        	<select name="year" id="year" class="form-select">
+            	{% for y in range(2023, 2026) %}
+            	<option value="{{ y }}" {% if y == selected_year %}selected{% endif %}>{{ y }}</option>
+            	{% endfor %}
+        	</select>
+    	</div>
+    	<div class="col-md-3 d-flex align-items-end">
+        	<button type="submit" class="btn btn-primary">View Summary</button>
+    	</div>
+    	<div class="col-md-3 d-flex align-items-end">
+        	<div class="fw-bold fs-5">Total Revenue: ₹{{ total_revenue }}</div>
+    	</div>
+    </form>
+
+
+	
+
+
+
+
+    <table class="table table-bordered">
+        <thead class="table-light">
+            <tr>
+                <th>Lot Name</th>
+                <th>Occupied Spots</th>
+                <th>Vacant Spots</th>
+		<th>Price per Unit Time</th>
+		<th>Revenue</th>
+		<th>Total Reservations</th>
+                <th>Pie Chart</th>
+            </tr>
+        </thead>
+        <tbody>
+		{% for summary in summary_data %}
+		<tr>
+    			<td>{{ summary.lot.name }}</td>
+    			<td>{{ summary.occupied }}</td>
+    			<td>{{ summary.vacant }}</td>
+			<td>₹{{ summary.lot.price }}</td>
+			<td>₹{{ summary.revenue }}</td>
+			<td>{{ summary.reservation_count }}</td>
+    			<td>
+        			<img src="{{ url_for('static', filename='summary_charts/' ~ pie_paths[loop.index0]) }}" alt="Pie Chart" width="180">
+    			</td>
+		</tr>
+		{% endfor %}
+
+        </tbody>
+    </table>
+
+    <hr class="my-4">
+
+    <h4>Revenue per Lot</h4>
+    <img src="{{ url_for('static', filename='summary_charts/' ~ bar_chart) }}" alt="Revenue Chart" class="img-fluid mt-2">
+</div>
+{% endblock %}
+
